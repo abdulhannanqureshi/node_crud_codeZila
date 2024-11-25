@@ -7,6 +7,7 @@ const verifyToken = (req, res, next) => {
     //token check karege aya hai ya nahi
     if (!token) return res.status(401).json({ status: false, message: 'Token not provided' });
 
+
     // jwt plugin se token verify karege  
     jwt.verify(token, process.env.JWT_SECRET, (err, data) => {
         if (err) return res.status(403).json({ status: false, message: "Invalid Token" })

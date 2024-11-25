@@ -1,4 +1,4 @@
-const { getAllData } = require("../../Model/common/common.model");
+const { getAllData, createData, getDetails } = require("../../Model/common/common.model");
 
 
 const getProduct = async (req, res) => {
@@ -10,4 +10,21 @@ const getProduct = async (req, res) => {
     }
 }
 
-module.exports = { getProduct }
+const addProduct = async (req, res) => {
+    try {
+        const data = await createData("product", req.body)
+        if (data.insertId) {
+            const getProductDetails = await getDetails('product', data.insertId)
+            res.status(200).json({ success: true, message: 'Data Found Successfully', data: getProductDetails });
+        } else {
+            res.status(500).json({ success: false, message: 'There was an error', });
+        }
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'There was an error', error: error.message });
+    }
+}
+
+module.exports = {
+    getProduct,
+    addProduct
+}
