@@ -12,8 +12,6 @@ const getProduct = async (req, res) => {
 
 const addProduct = async (req, res) => {
     try {
-        console.log(req.file);
-
         const data = await createData("product", { ...req.body, file: req.file.filename });
         if (data.insertId) {
             const getProductDetails = await getDetails('product', data.insertId)
