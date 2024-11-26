@@ -3,6 +3,7 @@ const JOI = require('joi');
 // Validation middle ware 
 
 const ValidationProductSchema = (req, res, next) => {
+
     const { error } = JOI.object({
         title: JOI.string().required().messages({
             'string.base': 'Title should be a string.',
@@ -29,13 +30,26 @@ const ValidationProductSchema = (req, res, next) => {
                 'number.positive': 'Price must be a positive number.'
             }),
         category_id: JOI.string().required(),
-        file: JOI.string().required(),
+        file: JOI.object().optional(),
         description: JOI.string().optional(),
     }).validate(req.body)
 
     if (error) {
         return res.status(400).json({ message: error.message, details: error.details })
     }
+    if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+    }
+    const validFileTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+    if (!validFileTypes.includes(req.file.mimetype)) {
+        return res.status(400).json({ message: 'Invalid file type. Only JPEG, PNG, and GIF are allowed.' });
+    }
+
+    // 5 mb size limit
+    if (req.file.size > 5 * 1024 * 1024) {
+        return res.status(400).json({ message: 'File size exceeds 5MB.' });
+    }
+
     next()
 }
 

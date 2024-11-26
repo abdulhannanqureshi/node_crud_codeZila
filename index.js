@@ -8,6 +8,8 @@ const app = express();
 const port = process.env.PORT || 8080
 
 app.use(express.json());
+// console.log(__dirname, "aa");
+// app.use(express.static(__dirname + '/src/public'));
 app.use("/", router)
 
 app.listen(port, () => {

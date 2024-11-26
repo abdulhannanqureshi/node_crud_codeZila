@@ -12,7 +12,9 @@ const getProduct = async (req, res) => {
 
 const addProduct = async (req, res) => {
     try {
-        const data = await createData("product", req.body)
+        console.log(req.file);
+
+        const data = await createData("product", { ...req.body, file: req.file.filename });
         if (data.insertId) {
             const getProductDetails = await getDetails('product', data.insertId)
             res.status(200).json({ success: true, message: 'Data Found Successfully', data: getProductDetails });
