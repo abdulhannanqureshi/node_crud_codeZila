@@ -53,5 +53,4 @@ const ValidationProductSchema = (req, res, next) => {
     next()
 }
 
-
 module.exports = { ValidationProductSchema }

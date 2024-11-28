@@ -35,10 +35,15 @@ const getDetails = async (tableName, id) => {
     return await runSQLQuery(query)
 }
 
+const deleteData = async (tableName, id) => {
+    const query = `DELETE FROM ${tableName} WHERE id = ${id}`;
+    return await runSQLQuery(query)
+}
 
 
 module.exports = {
     getAllData,
     createData,
-    getDetails
+    getDetails,
+    deleteData
 }
