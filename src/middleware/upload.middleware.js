@@ -26,8 +26,22 @@ const pdfStorage = multer.diskStorage({
     }
 });
 
+const fileFilter = (req, file, cb,) => {
+    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+
+    if (allowedMimeTypes.includes(file.mimetype)) {
+        // File type is valid, accept the file
+        cb(null, true);
+    } else {
+        // File type is invalid, reject the file
+        cb(new Error('Invalid file type. Only JPEG, PNG, JPG, and GIF files are allowed!'), false);
+    }
+};
+
 const uploadImage = multer({
-    storage: imageStorage
+    storage: imageStorage,
+    fileFilter: fileFilter,
+    limits: { fileSize: 1 * 1024 * 1024 }
 })
 
 const uploadPDF = multer({

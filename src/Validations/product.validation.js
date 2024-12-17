@@ -3,7 +3,6 @@ const JOI = require('joi');
 // Validation middle ware 
 
 const ValidationProductSchema = (req, res, next) => {
-
     const { error } = JOI.object({
         title: JOI.string().required().messages({
             'string.base': 'Title should be a string.',
@@ -34,6 +33,7 @@ const ValidationProductSchema = (req, res, next) => {
         description: JOI.string().optional(),
     }).validate(req.body)
 
+
     if (error) {
         return res.status(400).json({ message: error.message, details: error.details })
     }
@@ -49,7 +49,6 @@ const ValidationProductSchema = (req, res, next) => {
     if (req.file.size > 5 * 1024 * 1024) {
         return res.status(400).json({ message: 'File size exceeds 5MB.' });
     }
-
     next()
 }
 

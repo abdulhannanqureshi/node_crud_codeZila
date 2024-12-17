@@ -28,6 +28,8 @@ const createData = async (tableName, bodyData) => {
         query = `${query}'${bodyData[key]}', `
     })
     return await runSQLQuery(query)
+
+    // const query = `INSERT INTO users (username, email, password, dob) VALUES ('${data.username}', '${data.email}', '${data.password}', '${new Date(data.dob).toISOString()}')`;
 }
 
 const getDetails = async (tableName, id) => {
@@ -40,10 +42,24 @@ const deleteData = async (tableName, id) => {
     return await runSQLQuery(query)
 }
 
+const updateData = async (tableName, bodyData, id) => {
+    let query = `UPDATE ${tableName} SET`;
+
+    Object.keys(bodyData).forEach((key, index) => {
+        if (index === (Object.keys(bodyData)?.length - 1)) {
+            query = `${query} ${key} = '${bodyData[key]}'`
+            return
+        }
+        query = `${query} ${key} = '${bodyData[key]}',`
+    })
+    query += ` WHERE id = '${id}'`;
+    return await runSQLQuery(query)
+}
 
 module.exports = {
     getAllData,
     createData,
     getDetails,
-    deleteData
+    deleteData,
+    updateData
 }
