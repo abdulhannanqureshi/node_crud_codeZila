@@ -13,7 +13,7 @@ router.delete('/delete/:id', verifyToken, validateIdSchema, deleteProduct)
 router.get('/details/:id', verifyToken, getProductDetails)
 
 // validation age isliye nahi chal rha hai qk ye form data me arha hai to validation req.body null milege 
-qk json nahi hai to isliye image validation usi me bnana hoge image se related
+// qk json nahi hai to isliye image validation usi me bnana hoge image se related
 
 router.put('/update/:id', verifyToken, uploadImage.single('file'), ValidationProductSchema, updateProduct)
 

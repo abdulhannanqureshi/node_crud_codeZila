@@ -1,7 +1,7 @@
 const multer = require('multer');
 
-const imagesPath = './src/public/images/'
-const pdfPath = './src/public/pdf/'
+const imagesPath = './public/images/'
+const pdfPath = './public/pdf/'
 
 // Create Multer storage 
 // Isme 2 chij hoti hai destination and filename
@@ -34,14 +34,14 @@ const fileFilter = (req, file, cb,) => {
         cb(null, true);
     } else {
         // File type is invalid, reject the file
-        cb(new Error('Invalid file type. Only JPEG, PNG, JPG, and GIF files are allowed!'), false);
+        cb('Invalid file type. Only JPEG, PNG, JPG, and GIF files are allowed!');
     }
 };
 
 const uploadImage = multer({
     storage: imageStorage,
     fileFilter: fileFilter,
-    limits: { fileSize: 1 * 1024 * 1024 }
+    limits: { fileSize: 5 * 1024 * 1024 }
 })
 
 const uploadPDF = multer({

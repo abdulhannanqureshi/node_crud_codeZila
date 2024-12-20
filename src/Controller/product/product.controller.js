@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { getAllData, createData, getDetails, deleteData, updateData } = require("../../Model/common/common.model");
+const { deleteOldFiles } = require('../../helper/common.helper');
 
 const getProduct = async (req, res) => {
     try {
@@ -68,6 +69,10 @@ const updateProduct = async (req, res) => {
         // get user details from user and add id of user in product table
         let authorization = req.headers.authorization.split(' ')[1]
         let decoded = jwt.verify(authorization, process.env.JWT_SECRET);
+
+        console.log(req?.file?.path);
+
+        const deleteFileDat = deleteOldFiles(req?.file?.path)
 
         const data = await updateData("product", { ...req.body, file: req.file.filename, createdUser: decoded?.id }, req.params.id);
         const getProductDetails = await getDetails('product', req.params.id)
