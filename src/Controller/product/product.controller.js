@@ -1,10 +1,11 @@
 const jwt = require('jsonwebtoken');
-const { getAllData, createData, getDetails, deleteData, updateData } = require("../../Model/common/common.model");
+const { getAllData, createData, getDetails, deleteData, updateData, getFilterData } = require("../../Model/common/common.model");
 const { deleteOldFiles } = require('../../helper/common.helper');
 
 const getProduct = async (req, res) => {
     try {
-        const data = await getAllData('product')
+        const data = await getFilterData('product', req.query)
+
         res.status(200).json({ success: true, message: 'Data Found Successfully', data });
     } catch (error) {
         res.status(500).json({ success: false, message: 'There was an error', error: error.message });
