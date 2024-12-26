@@ -1,12 +1,20 @@
 const jwt = require('jsonwebtoken');
-const { getAllData, createData, getDetails, deleteData, updateData, getFilterData } = require("../../Model/common/common.model");
+const { getAllData, createData, getDetails, deleteData, updateData, getFilterData, getTotalRecordData } = require("../../Model/common/common.model");
 const { deleteOldFiles } = require('../../helper/common.helper');
+const { v4: uuidv4 } = require('uuid');
 
 const getProduct = async (req, res) => {
     try {
         const data = await getFilterData('product', req.query)
+        const [totalRecords] = await getTotalRecordData('product')
 
-        res.status(200).json({ success: true, message: 'Data Found Successfully', data });
+        res.status(200).json({
+            success: true, message: 'Data Found Successfully',
+            count: totalRecords?.total,
+            currentPage: parseInt(req?.query?.page),
+            totalPages: Math.ceil(totalRecords?.total / req?.query?.limit),
+            data,
+        });
     } catch (error) {
         res.status(500).json({ success: false, message: 'There was an error', error: error.message });
     }
@@ -14,14 +22,15 @@ const getProduct = async (req, res) => {
 
 const addProduct = async (req, res) => {
     try {
-
+        const id = uuidv4()
         // get user details from user and add id of user in product table
         let authorization = req.headers.authorization.split(' ')[1]
         let decoded = jwt.verify(authorization, process.env.JWT_SECRET);
 
-        const data = await createData("product", { ...req.body, file: req.file.filename, createdUser: decoded?.id });
-        if (data.insertId) {
-            const getProductDetails = await getDetails('product', data.insertId)
+        const data = await createData("product", { ...req.body, id, file: req.file.filename, createdUser: decoded?.id });
+
+        if (id) {
+            const getProductDetails = await getDetails('product', id)
             res.status(200).json({ success: true, message: 'Data Added Successfully', data: getProductDetails });
         } else {
             res.status(500).json({ success: false, message: 'There was an error', });

@@ -1,9 +1,11 @@
 const { generateToken } = require("../../helper/common.helper");
 const { isEmailDuplicate, createUser, getUserDetails } = require("../../Model/users/user.model");
 const bcryptjs = require("bcryptjs")
+const { v4: uuidv4 } = require('uuid');
 
 const signup = async (req, res) => {
     try {
+        const id = uuidv4()
         // Check Email duplicate
         const isEmailDuplicateCheck = await isEmailDuplicate(req.body.email)
 
@@ -14,10 +16,10 @@ const signup = async (req, res) => {
         //Password String convert into hash  string
         //Password ko direct store nahi karte hai hash password revers nahi hot hai
         req.body.password = await bcryptjs.hash(req.body.password, 10)
-        const userResponse = await createUser(req.body)
+        const userResponse = await createUser({ id, ...req.body });
 
         // Get user details for response of created user
-        const getUserRes = await getUserDetails(userResponse?.insertId)
+        const getUserRes = await getUserDetails(id)
         delete getUserRes[0].password;
 
         res.status(200).json({

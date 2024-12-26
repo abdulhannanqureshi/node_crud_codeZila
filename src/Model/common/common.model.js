@@ -1,6 +1,5 @@
 const { runSQLQuery } = require("../../helper/common.helper");
 
-
 const getAllData = async (tableName) => {
     const query = `SELECT * FROM ${tableName}`;
     return await runSQLQuery(query)
@@ -69,13 +68,27 @@ const getFilterData = async (tableName, queryParams) => {
     if (queryParams?.category_id) {
         query += ` AND category_id = ${queryParams?.category_id}`;
     }
+    if (queryParams?.sort_by && queryParams?.order_by) {
+        const sortKey = {
+            "1": "ASC",
+            "2": "DESC",
+        }
+        query += ` ORDER BY ${queryParams?.order_by} ${sortKey[queryParams?.sort_by]}`;
+    }
     if (queryParams?.limit) {
         query += ` limit ${queryParams?.limit}`;
     }
     if (queryParams?.page && queryParams?.limit) {
+        // skip karne k liye offset use karte hai qk offset itne item starting mese remove kardeta hai iska formul hai 
         let offset = (queryParams?.page - 1) * queryParams?.limit
         query += ` offset ${offset}`;
     }
+
+    return await runSQLQuery(query)
+}
+
+const getTotalRecordData = async (tableName) => {
+    const query = `SELECT COUNT(*) AS total FROM ${tableName}`
     return await runSQLQuery(query)
 }
 
@@ -86,5 +99,6 @@ module.exports = {
     getDetails,
     deleteData,
     updateData,
-    getFilterData
+    getFilterData,
+    getTotalRecordData
 }

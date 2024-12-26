@@ -7,7 +7,7 @@ const isEmailDuplicate = async (email) => {
 }
 
 const createUser = async (bodyData) => {
-    const query = `INSERT INTO user (name, email, password, dob, mobile_number) VALUES ('${bodyData.name}', '${bodyData.email}', '${bodyData.password}', '${bodyData.dob}','${bodyData.mobile_number}')`;
+    const query = `INSERT INTO user (id, name, email, password, dob, mobile_number) VALUES ('${bodyData.id}', '${bodyData.name}', '${bodyData.email}', '${bodyData.password}', '${bodyData.dob}','${bodyData.mobile_number}')`;
     return await runSQLQuery(query)
 }
 
